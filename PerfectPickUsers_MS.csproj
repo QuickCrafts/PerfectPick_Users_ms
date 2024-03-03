@@ -4,8 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <InvariantGlobalization>true</InvariantGlobalization>
-    <RootNamespace>_4UUsers</RootNamespace>
+    <RootNamespace>_PerfectPickUsers_MS</RootNamespace>
     <UserSecretsId>a9bd7b6c-ee05-4103-ad07-d92055c1b732</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
@@ -21,10 +20,6 @@
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.3.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>

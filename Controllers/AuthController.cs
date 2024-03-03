@@ -1,13 +1,13 @@
-﻿using _4UUsers.Functions;
+﻿using _PerfectPickUsers_MS.Functions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
-using _4UUsers.Models.User;
+using _PerfectPickUsers_MS.Models.User;
 using System.Text;
 
-namespace _4UUsers.Controllers
+namespace _PerfectPickUsers_MS.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -42,8 +42,10 @@ namespace _4UUsers.Controllers
 
         }
 
-        [HttpGet]
-        public IActionResult Getter([FromQuery] string pass)
+
+        [HttpPost]
+        [Route("register")]
+        public IActionResult RegisterUser([FromQuery] string pass)
         {
             try
             {

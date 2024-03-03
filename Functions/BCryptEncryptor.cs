@@ -1,4 +1,4 @@
-﻿namespace _4UUsers.Functions
+﻿namespace _PerfectPickUsers_MS.Functions
 {
     public class BCryptEncryptor
     {
