@@ -1,4 +1,5 @@
-﻿using _PerfectPickUsers_MS.Models.User;
+﻿using _PerfectPickUsers_MS.Functions;
+using _PerfectPickUsers_MS.Models.User;
 using _PerfectPickUsers_MS.Repositories;
 
 namespace _PerfectPickUsers_MS.Services
@@ -6,10 +7,29 @@ namespace _PerfectPickUsers_MS.Services
     public class UserService
     {
         private readonly UserRepository _userRepository;
+        private readonly BCryptEncryptor _Encryptor;
 
         public UserService()
         {
-            _userRepository = new UserRepository();
+            try
+            {
+                _userRepository = new UserRepository();
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error while creating UserRepository: " + e.Message);
+            }
+
+            try
+            {
+                _Encryptor = new BCryptEncryptor();
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error while creating Encryptor: " + e.Message);
+            }
+
+
         }
 
         public UserModel? GetUser(string userEmail)
@@ -40,6 +60,7 @@ namespace _PerfectPickUsers_MS.Services
 
         public bool CreateUser(UserModel user)
         {
+            user.Password = _Encryptor.Encrypt(user.Password);
             try
             {
                 return _userRepository.CreateUser(user);

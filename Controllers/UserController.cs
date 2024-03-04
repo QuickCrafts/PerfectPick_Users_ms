@@ -1,9 +1,11 @@
 ﻿using _PerfectPickUsers_MS.Models.User;
 using _PerfectPickUsers_MS.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace _PerfectPickUsers_MS.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : Controller
