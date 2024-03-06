@@ -18,15 +18,15 @@ namespace _PerfectPickUsers_MS.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetUsers([FromQuery]string? email)
+        public IActionResult GetUsers([FromQuery]int? userID)
         {
-            if (email != null)
+            if (userID.HasValue)
             {
                 try
                 {
-                    if(_userService.UserExists(email))
+                    if(_userService.UserExists(userID.Value))
                     {
-                        return Ok(_userService.GetUser(email));
+                        return Ok(_userService.GetUser(userID.Value));
                     }
                     else
                     {
@@ -78,21 +78,21 @@ namespace _PerfectPickUsers_MS.Controllers
         }
 
         [HttpPut]
-        public IActionResult UpdateUser([FromBody] UserDTO user)
+        public IActionResult UpdateUser([FromBody] UserDTO user, [FromQuery] int userID)
         {
             if(user.FirstName == null && user.LastName==null)
             {
                 return BadRequest("No fields sent to update");
             }
-
-            if (!_userService.UserExists(user.Email))
+                
+            if (!_userService.UserExists(userID))
             {
                 return NotFound("User not found");
             }
 
             try
             {
-                _userService.UpdateUser(user);
+                _userService.UpdateUser(user, userID);
                 return Ok("User updated successfully");
             }
             catch (Exception e)

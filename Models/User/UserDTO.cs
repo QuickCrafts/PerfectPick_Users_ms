@@ -6,7 +6,11 @@
 
         public string? LastName { get; set; } 
 
-        public string Email { get; set; } = null!;
+        public string? Birthdate { get; set; }
+
+        public string? Gender { get; set; }
+
+        public int? IdCountry { get; set; }
 
     }
 }

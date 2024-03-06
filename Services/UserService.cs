@@ -32,11 +32,11 @@ namespace _PerfectPickUsers_MS.Services
 
         }
 
-        public UserModel? GetUser(string userEmail)
+        public UserModel? GetUser(int userID)
         {
             try
             {
-                return _userRepository.GetUser(userEmail);
+                return _userRepository.GetUser(userID);
             }
             catch (Exception e)
             {
@@ -72,11 +72,11 @@ namespace _PerfectPickUsers_MS.Services
 
         }
 
-        public void UpdateUser(UserDTO user)
+        public void UpdateUser(UserDTO user, int userID)
         {
             try
             {
-                _userRepository.UpdateUser(user);
+                _userRepository.UpdateUser(user, userID);
             }
             catch (Exception e)
             {
@@ -85,11 +85,11 @@ namespace _PerfectPickUsers_MS.Services
 
         }
 
-        public void DeleteUser(string userEmail)
+        public void DeleteUser(int userID)
         {
             try
             {
-                _userRepository.DeleteUser(userEmail);
+                _userRepository.DeleteUser(userID);
             }
             catch (Exception e)
             {
@@ -98,17 +98,29 @@ namespace _PerfectPickUsers_MS.Services
 
         }
 
-        public bool UserExists(string userEmail)
+        public bool UserExists(int userID)
         {
             try
             {
-                return _userRepository.UserExists(userEmail);
+                return _userRepository.UserExists(userID);
             }
             catch (Exception e)
             {
                 throw new Exception(e.Message);
             }
 
+        }
+
+        public bool UserExists(string email)
+        {
+            try
+            {
+                return _userRepository.UserExists(email);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
     }
 }

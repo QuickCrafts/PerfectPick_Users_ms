@@ -15,19 +15,21 @@ namespace _PerfectPickUsers_MS.Controllers
     [ApiController]
     public class AuthController : Controller
     {
-        private readonly string? _SecretKey;
+        private readonly string _SecretKey;
         private readonly UserService _UserAuxiliarService;
+        public readonly AESModule _AESModule;
 
-        public AuthController(IConfiguration config)
+        public AuthController()
         {
 
             try
             {
-                _SecretKey = config.GetSection("Settings").GetSection("secretKey").ToString();
-                if (string.IsNullOrEmpty(_SecretKey))
+                string? tryKey = Environment.GetEnvironmentVariable("secretKey");
+                if (string.IsNullOrEmpty(tryKey))
                 {
                     throw new Exception("Secret key not found in enviornment");
                 }
+                _SecretKey = tryKey;
             }
             catch (Exception e)
             {
@@ -43,12 +45,20 @@ namespace _PerfectPickUsers_MS.Controllers
                 throw new Exception("Error while creating UserService: " + e.Message);
             }
 
+            try
+            {
+                _AESModule = new AESModule();
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error while creating AESModule: " + e.Message);
+            }
+
         }
 
-        [Authorize]
         [HttpPost]
         [Route("GenerateToken")]
-        public IActionResult GenerateToken([FromBody] string user_email)
+        public IActionResult GenerateToken([FromQuery] int userID)
         {
             const bool isRegistered = true;
 
@@ -56,7 +66,9 @@ namespace _PerfectPickUsers_MS.Controllers
             {
                 var keyBytes = Encoding.UTF8.GetBytes(_SecretKey);
                 var claims = new ClaimsIdentity();
-                claims.AddClaim(new Claim(ClaimTypes.Email, user_email));
+                string ID = Convert.ToString(userID);
+                string Encrypted = _AESModule.EncryptString(ID);
+                claims.AddClaim(new Claim(ClaimTypes.SerialNumber, Encrypted));
 
 
                 var tokenDescriptor = new SecurityTokenDescriptor
@@ -80,7 +92,7 @@ namespace _PerfectPickUsers_MS.Controllers
 
         [HttpPost]
         [Route("VerifyToken")]
-        public IActionResult VerifyToken([FromBody] string token)
+        public IActionResult VerifyToken([FromQuery] string token)
         {
             var keyBytes = Encoding.UTF8.GetBytes(_SecretKey);
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -95,20 +107,37 @@ namespace _PerfectPickUsers_MS.Controllers
 
             SecurityToken securityToken;
             var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
-            string? email = principal.FindFirst(ClaimTypes.Email).Value;
-            bool exists = _UserAuxiliarService.UserExists(email);
-            if (email == null || !exists)
+            string userPotentialID = principal.FindFirst(ClaimTypes.SerialNumber).Value;
+            int userID = _AESModule.DecryptString(userPotentialID);
+            bool exists = _UserAuxiliarService.UserExists(userID);
+            if (userPotentialID==null || !exists)
             {
                 return Unauthorized();
             }
 
-            var user = _UserAuxiliarService.GetUser(email);
+            var user = _UserAuxiliarService.GetUser(Convert.ToInt16(userID));
             bool isUser = true;
             bool userIsAdmin = user.IsAdmin ? true : false;
             return new OkObjectResult(new { isUser = isUser, isAdmin = userIsAdmin });
 
 
 
+        }
+
+        [HttpPost]
+        [Route("Register")]
+        public IActionResult Register([FromBody] UserModel user)
+        {
+            if (user == null)
+            {
+                return BadRequest("Invalid client request");
+            }
+            if (_UserAuxiliarService.UserExists(user.Email))
+            {
+                return BadRequest("User already exists");
+            }
+
+            return Ok("User added successfully");
         }
     }
 }

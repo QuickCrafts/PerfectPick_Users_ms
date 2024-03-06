@@ -13,18 +13,22 @@ namespace _PerfectPickUsers_MS.Repositories
 
         }
 
-        public UserModel GetUser(string userEmail)
+        public UserModel GetUser(int userID)
         {
 
             using (var _context = new PerfectPickUsersDbContext())
             {
-                var user = _context.Users.FindAsync(userEmail);
+                var user = _context.Users.FindAsync(userID);
                 return new UserModel
                 {
-                    Email = user.Result.UserEmail,
-                    FirstName = user.Result.UserName,
-                    LastName = user.Result.UserSurname,
-                    IsAdmin = user.Result.UserIsAdmin
+                    Email = user.Result.Email,
+                    Password = user.Result.Password,
+                    FirstName = user.Result.FirstName,
+                    LastName = user.Result.LastName,
+                    Birthdate = user.Result.Birthdate,
+                    Gender = user.Result.Gender,
+                    CreatedTime = user.Result.CreatedTime,
+                    IdCountry = user.Result.IdCountry
                 };
             }
 
@@ -40,10 +44,14 @@ namespace _PerfectPickUsers_MS.Repositories
                 {
                     usersList.Add(new UserModel
                     {
-                        Email = user.UserEmail,
-                        FirstName = user.UserName,
-                        LastName = user.UserSurname,
-                        IsAdmin = user.UserIsAdmin
+                        Email = user.Email,
+                        Password = user.Password,
+                        FirstName = user.FirstName,
+                        LastName = user.LastName,
+                        Birthdate = user.Birthdate,
+                        Gender = user.Gender,
+                        CreatedTime = user.CreatedTime,
+                        IdCountry = user.IdCountry
                     });
                 }
                 return usersList;
@@ -62,11 +70,14 @@ namespace _PerfectPickUsers_MS.Repositories
                     }
                     var newUser = new User
                     {
-                        UserEmail = user.Email,
-                        UserName = user.FirstName,
-                        UserSurname = user.LastName,
-                        UserPassword = user.Password,
-                        UserIsAdmin = false
+                        Email = user.Email,
+                        Password = user.Password,
+                        FirstName = user.FirstName,
+                        LastName = user.LastName,
+                        Birthdate = user.Birthdate,
+                        Gender = user.Gender,
+                        CreatedTime = user.CreatedTime,
+                        IdCountry = user.IdCountry
                     };
                     _context.Users.Add(newUser);
                     _context.SaveChanges();
@@ -82,15 +93,19 @@ namespace _PerfectPickUsers_MS.Repositories
 
         }
 
-        public void UpdateUser(UserDTO user)
+        public void UpdateUser(UserDTO user, int userID)
         {
             try
             {
                 using (var _context = new PerfectPickUsersDbContext())
                 {
-                    var userToUpdate = _context.Users.Find(user.Email);
-                    userToUpdate.UserName = user.FirstName ?? userToUpdate.UserName;
-                    userToUpdate.UserSurname = user.LastName ?? userToUpdate.UserSurname;
+                    var userToUpdate = _context.Users.Find(userID);
+                    userToUpdate.FirstName = user.FirstName ?? userToUpdate.FirstName;
+                    userToUpdate.LastName = user.LastName ?? userToUpdate.LastName;
+                    userToUpdate.Birthdate = user.Birthdate ?? userToUpdate.Birthdate;
+                    userToUpdate.Gender = user.Gender ?? userToUpdate.Gender;
+                    userToUpdate.IdCountry = user.IdCountry ?? userToUpdate.IdCountry;
+
                     _context.SaveChanges();
                 }
             }
@@ -101,13 +116,13 @@ namespace _PerfectPickUsers_MS.Repositories
 
         }
 
-        public void DeleteUser(string userEmail)
+        public void DeleteUser(int userID)
         {
             try
             {
                 using (var _context = new PerfectPickUsersDbContext())
                 {
-                    var user = _context.Users.Find(userEmail);
+                    var user = _context.Users.Find(userID);
                     _context.Users.Remove(user);
                     _context.SaveChanges();
                 }
@@ -118,11 +133,19 @@ namespace _PerfectPickUsers_MS.Repositories
             }
         }
 
-        public bool UserExists(string userEmail)
+        public bool UserExists(int userID)
         {
             using (var _context = new PerfectPickUsersDbContext())
             {
-                return _context.Users.Find(userEmail) != null;
+                return _context.Users.Find(userID) != null;
+            }
+        }
+
+        public bool UserExists(string email)
+        {
+            using (var _context = new PerfectPickUsersDbContext())
+            {
+                return _context.Users.Find(email) != null;
             }
         }
     }

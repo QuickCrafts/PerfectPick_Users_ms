@@ -15,7 +15,10 @@
       "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "secretKey": "Ro$]eCkh4;OBUuuS9/mBzx=K!xqg*eLLbC}Qb)jA^\\\\&zuTUlsh&ej(V#b))b",
+        "secretTokenKey": "DMa:X-Sup\\hSM.k8",
+        "secretTokenIV": "@UvJb{+S,\"}Gfa<3"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:7128;http://localhost:5066"
