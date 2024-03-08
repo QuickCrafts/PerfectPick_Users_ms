@@ -1,6 +1,9 @@
 ﻿using _PerfectPickUsers_MS.Functions;
+using _PerfectPickUsers_MS.Models.Email;
 using _PerfectPickUsers_MS.Models.User;
 using _PerfectPickUsers_MS.Repositories;
+
+
 
 namespace _PerfectPickUsers_MS.Services
 {
@@ -8,11 +11,13 @@ namespace _PerfectPickUsers_MS.Services
     {
         private readonly UserRepository _userRepository;
         private readonly BCryptEncryptor _Encryptor;
+        private readonly EmailSender _EmailSender;
 
         public UserService()
         {
             try
             {
+                _EmailSender = new EmailSender();
                 _userRepository = new UserRepository();
             }
             catch (Exception e)
@@ -60,14 +65,29 @@ namespace _PerfectPickUsers_MS.Services
 
         public bool CreateUser(UserModel user)
         {
-            user.Password = _Encryptor.Encrypt(user.Password);
             try
             {
+                EmailDTO emailToSend = new EmailDTO
+                {
+                    To = user.Email,
+                    Subject = "Welcome to PerfectPick!",
+                    Body = "Welcome to PerfectPick! Your account has been created successfully."
+                };
+
+                _EmailSender.SendEmail(emailToSend);
+            } catch (Exception e)
+            {
+                throw new Exception("Error while creating user email "+ e.Message);
+            }
+            try
+            {
+                user.Password = _Encryptor.Encrypt(user.Password);
+
                 return _userRepository.CreateUser(user);
             }
             catch (Exception e)
             {
-                throw new Exception(e.Message);
+                throw new Exception("Error while creating user on Database "+ e.Message);
             }
 
         }
@@ -98,11 +118,11 @@ namespace _PerfectPickUsers_MS.Services
 
         }
 
-        public bool UserExists(int userID)
+        public bool UserIDExists(int userID)
         {
             try
             {
-                return _userRepository.UserExists(userID);
+                return _userRepository.UserIDExists(userID);
             }
             catch (Exception e)
             {
@@ -111,11 +131,11 @@ namespace _PerfectPickUsers_MS.Services
 
         }
 
-        public bool UserExists(string email)
+        public bool UserEmailExists(string email)
         {
             try
             {
-                return _userRepository.UserExists(email);
+                return _userRepository.UserEmailExists(email);
             }
             catch (Exception e)
             {

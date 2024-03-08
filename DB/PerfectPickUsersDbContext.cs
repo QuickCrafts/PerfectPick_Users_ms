@@ -22,8 +22,7 @@ public partial class PerfectPickUsersDbContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=localhost;Database=PerfectPickUsers_DB;Integrated Security=True;Persist Security Info=False;Pooling=False;Multiple Active Result Sets=False;Connect Timeout=60;Encrypt=True;Trust Server Certificate=True;Command Timeout=0");
+        => optionsBuilder.UseSqlServer(Environment.GetEnvironmentVariable("connectionString"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -73,6 +72,10 @@ public partial class PerfectPickUsersDbContext : DbContext
             entity.HasKey(e => e.IdUser);
 
             entity.Property(e => e.IdUser).HasColumnName("id_user");
+            entity.Property(e => e.AvatarUrl)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("avatar_url");
             entity.Property(e => e.Birthdate)
                 .HasMaxLength(30)
                 .IsUnicode(false)
@@ -102,6 +105,8 @@ public partial class PerfectPickUsersDbContext : DbContext
                 .HasMaxLength(60)
                 .IsUnicode(false)
                 .HasColumnName("password");
+            entity.Property(e => e.Setup).HasColumnName("setup");
+            entity.Property(e => e.Verified).HasColumnName("verified");
         });
 
         OnModelCreatingPartial(modelBuilder);

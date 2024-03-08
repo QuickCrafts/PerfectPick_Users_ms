@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace _PerfectPickUsers_MS.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : Controller
@@ -18,27 +17,28 @@ namespace _PerfectPickUsers_MS.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetUsers([FromQuery]int? userID)
+        public IActionResult GetUser([FromQuery] int? userID)
         {
             if (userID.HasValue)
             {
                 try
                 {
-                    if(_userService.UserExists(userID.Value))
+                    if (_userService.UserIDExists(userID.Value))
                     {
                         return Ok(_userService.GetUser(userID.Value));
                     }
                     else
                     {
                         return NotFound("User not found");
-                    }   
+                    }
                 }
                 catch (Exception e)
                 {
                     return StatusCode(500, e.Message);
                 }
-                
-            } else
+
+            }
+            else
             {
                 try
                 {
@@ -49,27 +49,28 @@ namespace _PerfectPickUsers_MS.Controllers
                     return StatusCode(500, e.Message);
                 }
             }
-            
+
         }
 
         [HttpPost]
-        public IActionResult CreateUser([FromBody] UserModel user)
+        [Route("Register")]
+        public IActionResult Register([FromBody] UserModel user)
         {
-            if (_userService.UserExists(user.Email))
+            try
             {
-                return BadRequest("User already exists");
+                if (_userService.UserEmailExists(user.Email))
+                {
+                    return BadRequest("User already exists");
+                }
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
             }
             try
             {
                 var result = _userService.CreateUser(user);
-                if (result)
-                {
-                    return Ok("User created sucessfully!");
-                }
-                else
-                {
-                    return BadRequest("User already exists");
-                }
+                return Ok("User created sucessfully!");
             }
             catch (Exception e)
             {
@@ -80,12 +81,12 @@ namespace _PerfectPickUsers_MS.Controllers
         [HttpPut]
         public IActionResult UpdateUser([FromBody] UserDTO user, [FromQuery] int userID)
         {
-            if(user.FirstName == null && user.LastName==null)
+            if (user.FirstName == null && user.LastName == null)
             {
                 return BadRequest("No fields sent to update");
             }
-                
-            if (!_userService.UserExists(userID))
+
+            if (!_userService.UserIDExists(userID))
             {
                 return NotFound("User not found");
             }

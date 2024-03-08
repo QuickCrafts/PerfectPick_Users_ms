@@ -17,11 +17,17 @@ public partial class User
 
     public string Birthdate { get; set; } = null!;
 
-    public string Gender { get; set; } = null!;
+    public string? Gender { get; set; }
 
     public string CreatedTime { get; set; } = null!;
 
-    public int IdCountry { get; set; }
+    public string? AvatarUrl { get; set; }
+
+    public int? IdCountry { get; set; }
+
+    public bool Verified { get; set; }
+
+    public bool Setup { get; set; }
 
     public virtual ResToken? ResToken { get; set; }
 }
