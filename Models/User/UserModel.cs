@@ -16,13 +16,11 @@ namespace _PerfectPickUsers_MS.Models.User
 
         public string Birthdate { get; set; } = null!;
 
-        public string Gender { get; set; } = null!;
+        public string? CreatedTime { get; set; }
 
-        public string CreatedTime { get; set; } = null!;
+        public bool Verified { get; set; }
 
-        public int IdCountry { get; set; }
-
-        public bool IsAdmin { get; set; }
+        public bool Setup { get; set; }
 
 
     }

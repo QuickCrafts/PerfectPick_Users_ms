@@ -74,7 +74,7 @@ namespace _PerfectPickUsers_MS.Controllers
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {
                     Subject = claims,
-                    Expires = DateTime.UtcNow.AddHours(1),
+                    Expires = DateTime.UtcNow.AddHours(4),
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(keyBytes), SecurityAlgorithms.HmacSha256Signature)
                 };
 
@@ -107,9 +107,14 @@ namespace _PerfectPickUsers_MS.Controllers
 
             SecurityToken securityToken;
             var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
-            string userPotentialID = principal.FindFirst(ClaimTypes.SerialNumber).Value;
-            int userID = _AESModule.DecryptString(userPotentialID);
-            bool exists = _UserAuxiliarService.UserExists(userID);
+            var userPotentialID = principal.FindFirst(ClaimTypes.SerialNumber);
+            if (userPotentialID == null)
+            {
+                return Unauthorized();
+            }
+            string encryptedID = userPotentialID.Value;
+            int userID = _AESModule.DecryptString(encryptedID);
+            bool exists = _UserAuxiliarService.UserIDExists(userID);
             if (userPotentialID==null || !exists)
             {
                 return Unauthorized();
@@ -117,27 +122,13 @@ namespace _PerfectPickUsers_MS.Controllers
 
             var user = _UserAuxiliarService.GetUser(Convert.ToInt16(userID));
             bool isUser = true;
-            bool userIsAdmin = user.IsAdmin ? true : false;
-            return new OkObjectResult(new { isUser = isUser, isAdmin = userIsAdmin });
+            bool userIsVerified = user.Verified ? true : false;
+            bool userIsSetup = user.Setup ? true : false;
+            return new OkObjectResult(new { isUser = isUser, Verified = userIsVerified, Setup = userIsSetup });
 
 
 
         }
 
-        [HttpPost]
-        [Route("Register")]
-        public IActionResult Register([FromBody] UserModel user)
-        {
-            if (user == null)
-            {
-                return BadRequest("Invalid client request");
-            }
-            if (_UserAuxiliarService.UserExists(user.Email))
-            {
-                return BadRequest("User already exists");
-            }
-
-            return Ok("User added successfully");
-        }
     }
 }
