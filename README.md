@@ -483,23 +483,59 @@ interface Create_Country_Response{
 Update new country information.
 
 ```http
-  PUT /countries
+  PUT /countries/${id}
 ```
 
 ```typescript
 // Body interface
 interface Update_Country{
-  name: string // English name
-  code_2: string //ISO 3166-1 alpha-2
-  code_3: string //ISO 3166-1 alpha-3
+  name?: string // English name
+  code_2?: string //ISO 3166-1 alpha-2
+  code_3?: string //ISO 3166-1 alpha-3
 }
 ```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `id` | `int` | **Required**. Country id |
 
 | Response Status | Type     | Description                |
 | :-------- | :------- | :------------------------- |
 | `201` | `success` | "Country updated"|
 | `404` | `error` | "Country not found" |
 | `400` | `error` | "Guard failed" |
+| `500` | `error` | Any other error message|
+
+#### Delete Country
+
+Delete country information.
+
+```http
+  DELETE /countries
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `id` | `int` | **Required**. Country id |
+
+| Response Status | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `201` | `success` | "Country deleted."|
+| `404` | `error` | "Country not found" |
+| `400` | `error` | "Id not provided." |
+| `500` | `error` | Any other error message|
+
+#### Initialization and update of countries
+
+Get countries information from [API](https://restcountries.com/) to init PerfectPick country database or to update with new missing countries.
+
+```http
+  PUT /countries
+```
+
+| Response Status | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `201` | `success` | "Countries updated."|
 | `500` | `error` | Any other error message|
 
 
