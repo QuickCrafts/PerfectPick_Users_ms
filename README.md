@@ -562,17 +562,16 @@ To deploy this project run
 
 Clone the project
 
-[//]: <> (@todo correct all)
-
 ```bash
-  git clone https://link-to-project
+  git clone https://github.com/QuickCrafts/PerfectPick_User_ms.git
 ```
 
 Go to the project directory
 
 ```bash
-  cd my-project
+  cd PerfectPick_User_ms
 ```
+[//]: <> (@todo correct all)
 
 Install dependencies
 
@@ -584,4 +583,4 @@ Start the server
 
 ```bash
   npm 
-
+```
