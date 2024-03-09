@@ -8,6 +8,8 @@ Users CRUD and authentication management.
 
 ## API Reference
 
+### Registration
+
 #### Sign up User
 
 Create new user on database with only required data and send an email to verified the user. Returns user id generated.
@@ -122,6 +124,40 @@ interface {
 | `403` | `error` | "Invalid token" |
 | `500` | `error` | Any other error message|
 
+### Set up
+
+#### Update user
+
+Update user information, email restricted.
+
+```http
+  PUT /users/${id}
+```
+
+```typescript
+// Body interface
+interface Update_User{
+  firstname?: string
+  lastname?: string // User last name
+  avatar?: string // String Base64 with avatar image
+  birthdate?: string // String with the timestamp
+  gender?: 'M' | 'F' | 'O' | 'P' // User gender coded
+  country?: number // Country Id
+}
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `id` | `int` | **Required**. User id |
+
+| Response Status | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `201` | `success` | "User updated"|
+| `404` | `error` | "User not found"|
+| `400` | `error` | "Id not provided" |
+| `400` | `error` | "Guard failed" |
+| `500` | `error` | Any other error message|
+
 #### Complete user set up
 
 User has been completed his setup.
@@ -140,6 +176,8 @@ User has been completed his setup.
 | `404` | `error` | "User not found"|
 | `400` | `error` | "Email not provided" |
 | `500` | `error` | Any other error message|
+
+### Auth
 
 #### Token secure
 
@@ -248,37 +286,7 @@ interface Response_Login{
 }
 ```
 
-#### Update user
-
-Update user information, email restricted.
-
-```http
-  PUT /users/${id}
-```
-
-```typescript
-// Body interface
-interface Update_User{
-  firstname?: string
-  lastname?: string // User last name
-  avatar?: string // String Base64 with avatar image
-  birthdate?: string // String with the timestamp
-  gender?: 'M' | 'F' | 'O' | 'P' // User gender coded
-  country?: number // Country Id
-}
-```
-
-| Parameter | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `id` | `int` | **Required**. User id |
-
-| Response Status | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `201` | `success` | "User updated"|
-| `404` | `error` | "User not found"|
-| `400` | `error` | "Id not provided" |
-| `400` | `error` | "Guard failed" |
-| `500` | `error` | Any other error message|
+### User Management
 
 #### Delete user
 
@@ -392,6 +400,8 @@ interface Response_Get_Users{
   users: User[]
 }
 ```
+
+### Nationality
 
 #### Get Country
 
