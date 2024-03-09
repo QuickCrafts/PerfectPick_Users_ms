@@ -3,6 +3,9 @@
 
 Users CRUD and authentication management.
 
+---
+<br />
+
 ## API Reference
 
 #### Sign up User
@@ -537,6 +540,12 @@ Get countries information from [API](https://restcountries.com/) to init Perfect
 | :-------- | :------- | :------------------------- |
 | `201` | `success` | "Countries updated."|
 | `500` | `error` | Any other error message|
+
+
+---
+<br />
+<br />
+<br />
 
 
 ## Deployment
