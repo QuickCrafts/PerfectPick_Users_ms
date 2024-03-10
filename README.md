@@ -25,7 +25,7 @@ interface Create_User{
   lastname: string // User last name
   email: string // User email - Check if email is valid
   password: string // User password to encrypt
-  role: 'READER' | 'ADMIN'
+  role: boolean // 0 -> 'READER' and 1 -> 'ADMIN'
 }
 ```
 
@@ -349,7 +349,7 @@ interface Response_Get_User{
   email: string
   verified: boolean
   setup: boolean
-  role: 'READER' | 'ADMIN'
+  role: boolean // 0 -> 'READER' and 1 -> 'ADMIN'
 }
 ```
 
@@ -395,7 +395,7 @@ interface User{
   email: string
   verified: boolean
   setup: boolean
-  role: 'READER' | 'ADMIN'
+  role: boolean // 0 -> 'READER' and 1 -> 'ADMIN'
 }
 
 // Body interface
