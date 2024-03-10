@@ -25,6 +25,7 @@ interface Create_User{
   lastname: string // User last name
   email: string // User email - Check if email is valid
   password: string // User password to encrypt
+  role: 'READER' | 'ADMIN'
 }
 ```
 
@@ -44,7 +45,7 @@ interface Create_User_Response{
 
 #### Sign up User with google
 
-Create new user on database using google account services. Returns user id generated. Verification email not needed.
+Create new user on database using google account services. Returns user id generated. Verification email not needed. The user is a classified as "READER" automatically.
 
 ```http
   POST /users/google
@@ -73,7 +74,7 @@ interface Create_User_Response{
 
 #### Sign up User with facebook
 
-Create new user on database using facebook account services. Returns user id generated. Verification email not needed.
+Create new user on database using facebook account services. Returns user id generated. Verification email not needed. The user is a classified as "READER" automatically.
 
 ```http
   POST /users/facebook
@@ -348,6 +349,7 @@ interface Response_Get_User{
   email: string
   verified: boolean
   setup: boolean
+  role: 'READER' | 'ADMIN'
 }
 ```
 
@@ -393,6 +395,7 @@ interface User{
   email: string
   verified: boolean
   setup: boolean
+  role: 'READER' | 'ADMIN'
 }
 
 // Body interface
