@@ -72,35 +72,6 @@ interface Create_User_Response{
 }
 ```
 
-#### Sign up User with facebook
-
-Create new user on database using facebook account services. Returns user id generated. Verification email not needed. The user is a classified as "READER" automatically.
-
-```http
-  POST /users/facebook
-```
-
-```typescript
-// Body interface
-interface Create_User{
-  facebook_token: string
-}
-```
-
-| Response Status | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `201` | `success` | Returns user id|
-| `400` | `error` | "Guard failed" |
-| `400` | `error` | "Email already registered" |
-| `500` | `error` | Any other error message|
-
-```typescript
-// Response interface
-interface Create_User_Response{
-  id: number // User id
-}
-```
-
 #### Confirm user
 
 Verify new user account.
@@ -258,34 +229,7 @@ interface Response_Login{
 }
 ```
 
-#### Log in User with facebook
 
-Generate access token on using facebook account.
-
-```http
-  POST /users/login
-```
-
-```typescript
-// Body interface
-interface {
-  facebook_token: string
-}
-```
-
-| Response Status | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `201` | `success` | return session token|
-| `401` | `error` | "User not found" |
-| `400` | `error` | "Guard failed" |
-| `500` | `error` | Any other error message|
-
-```typescript
-// Response interface
-interface Response_Login{
-  token: string // user session token
-}
-```
 
 ### User Management
 
@@ -563,37 +507,22 @@ Get countries information from [API](https://restcountries.com/) to init Perfect
 
 ## Deployment
 
-To deploy this project run
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR webapp
 
-[//]: <> (@todo correct)
+EXPOSE 8080
+EXPOSE 8081
 
-```bash
-  npm run deploy
-```
+#COPY PROJECT FILES
+COPY ./*.csproj ./
+RUN dotnet restore PerfectPickUsers_MS.csproj
 
-## Run Locally
+#COPY ALL FILES
+COPY . .
+RUN dotnet publish -c Release -o out
 
-Clone the project
-
-```bash
-  git clone https://github.com/QuickCrafts/PerfectPick_User_ms.git
-```
-
-Go to the project directory
-
-```bash
-  cd PerfectPick_User_ms
-```
-[//]: <> (@todo correct all)
-
-Install dependencies
-
-```bash
-  npm install
-```
-
-Start the server
-
-```bash
-  npm 
-```
+#BUILD THE IMAGE
+FROM mcr.microsoft.com/dotnet/sdk:8.0
+WORKDIR /webapp
+COPY --from=build /webapp/out .
+ENTRYPOINT ["dotnet", "PerfectPickUsers_MS.dll"]
