@@ -158,9 +158,9 @@ namespace _PerfectPickUsers_MS.Controllers
             }
         }
 
-        [HttpPost("{id}")]
+        [HttpPost]
         [Route("setup")]
-        public IActionResult Setup(int id)
+        public IActionResult Setup([FromQuery]int id)
         {
             try
             {
