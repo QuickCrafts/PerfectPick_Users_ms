@@ -16,11 +16,17 @@ namespace _PerfectPickUsers_MS.Models.User
 
         public string Birthdate { get; set; } = null!;
 
+        public bool Role { get; set; }
+
+        public string? AvatarUrl { get; set; }
+
         public string? CreatedTime { get; set; }
 
         public bool Verified { get; set; }
 
         public bool Setup { get; set; }
+
+        
 
 
     }

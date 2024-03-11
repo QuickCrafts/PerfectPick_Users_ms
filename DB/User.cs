@@ -29,5 +29,7 @@ public partial class User
 
     public bool Setup { get; set; }
 
+    public bool Role { get; set; }
+
     public virtual ResToken? ResToken { get; set; }
 }

@@ -20,14 +20,20 @@
         "secretTokenKey": "DMa:X-Sup\\hSM.k8",
         "secretTokenIV": "@UvJb{+S,\"}Gfa<3",
         "connectionString": "Server=localhost;Database=PerfectPickUsers_DB;Integrated Security=True;Persist Security Info=False;Pooling=False;Multiple Active Result Sets=False;Connect Timeout=60;Encrypt=True;Trust Server Certificate=True;Command Timeout=0",
-        "secretTempTokenKey": "K4}zuY5mYfQR8A\\xrBTYExT)7Y08-$mA>FWAfE&WKWTQImp]$GN(l8!K\";+B",
+        "secretTempTokenKey": "Nm*N,Z]f0tSU+nca9a$<Kx(K~wcb_\\bG{uvwEJ1!-0:Ugu@Gw0Hm)z&vs']QE<+",
         "emailHost": "smtp.gmail.com",
         "emailPort": "587",
         "emailUsername": "perfectpickcol@gmail.com",
-        "emailPassword": "ylsk arjf gxdn jrjj"
+        "emailPassword": "ylsk arjf gxdn jrjj",
+        "authClientID": "733245836417-knns8agi7aoalmbd6t3p6nian1i51g1m.apps.googleusercontent.com",
+        "authClientSecret": "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",
+        "authFBClientID": "1098351767878487",
+        "authFBClientSecret": "01a72698f808ed91df1f8750e4bd468a",
+        "SafeGooglePassword": "simulation",
+        "countriesURI": "https://restcountries.com"
       },
       "dotnetRunMessages": true,
-      "applicationUrl": "https://localhost:7128;http://localhost:5066"
+      "applicationUrl": "https://localhost:5000"
     },
     "IIS Express": {
       "commandName": "IISExpress",

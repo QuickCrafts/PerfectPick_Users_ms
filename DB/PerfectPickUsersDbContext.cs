@@ -30,9 +30,7 @@ public partial class PerfectPickUsersDbContext : DbContext
         {
             entity.HasKey(e => e.IdCountry);
 
-            entity.Property(e => e.IdCountry)
-                .ValueGeneratedNever()
-                .HasColumnName("id_country");
+            entity.Property(e => e.IdCountry).HasColumnName("id_country");
             entity.Property(e => e.Code2)
                 .HasMaxLength(2)
                 .IsUnicode(false)
@@ -71,6 +69,8 @@ public partial class PerfectPickUsersDbContext : DbContext
         {
             entity.HasKey(e => e.IdUser);
 
+            entity.HasIndex(e => e.Email, "UniqueEmail_Users").IsUnique();
+
             entity.Property(e => e.IdUser).HasColumnName("id_user");
             entity.Property(e => e.AvatarUrl)
                 .HasMaxLength(100)
@@ -105,6 +105,7 @@ public partial class PerfectPickUsersDbContext : DbContext
                 .HasMaxLength(60)
                 .IsUnicode(false)
                 .HasColumnName("password");
+            entity.Property(e => e.Role).HasColumnName("role");
             entity.Property(e => e.Setup).HasColumnName("setup");
             entity.Property(e => e.Verified).HasColumnName("verified");
         });
