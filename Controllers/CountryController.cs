@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace _PerfectPickUsers_MS.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class CountryController : Controller
     {
         private readonly CountryService _countryService;

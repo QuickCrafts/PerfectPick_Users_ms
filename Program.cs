@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 
 var builder = WebApplication.CreateBuilder(args);
-var connectionString = builder.Configuration.GetConnectionString("_PerfectPickUsers_MSContextConnection") ?? throw new InvalidOperationException("Connection string '_PerfectPickUsers_MSContextConnection' not found.");
 
 
 
@@ -46,11 +45,6 @@ builder.Services.AddAuthentication(config =>
     {
         googleOptions.ClientId = Environment.GetEnvironmentVariable("authClientID") ?? throw new Exception("Couldn't get google auth id");
         googleOptions.ClientSecret = Environment.GetEnvironmentVariable("authClientSecret") ?? throw new Exception("Couldn't get google auth secret");
-    })
-    .AddFacebook(facebookOptions =>
-    {
-        facebookOptions.AppId = Environment.GetEnvironmentVariable("authFBClientID") ?? throw new Exception("Couldn't get facebook auth id");
-        facebookOptions.AppSecret = Environment.GetEnvironmentVariable("authFBClientSecret") ?? throw new Exception("Couldn't get facebook auth secret");
     });
 
 builder.Services.AddControllers();

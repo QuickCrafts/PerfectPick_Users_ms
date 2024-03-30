@@ -30,7 +30,7 @@ namespace _PerfectPickUsers_MS.Functions
             }
         }
 
-        public string GenerateToken(int userID, bool login,bool? isAdmin)
+        public string GenerateToken(int userID, bool login)
         {
             try
             {
@@ -40,10 +40,7 @@ namespace _PerfectPickUsers_MS.Functions
                 string ID = Convert.ToString(userID);
                 string Encrypted = _AESModule.EncryptString(ID);
                 claims.AddClaim(new Claim(ClaimTypes.SerialNumber, Encrypted));
-                if (isAdmin.HasValue)
-                {
-                    claims.AddClaim(new Claim(ClaimTypes.Role, isAdmin.Value ? "Admin" : "User"));
-                }
+
 
 
 

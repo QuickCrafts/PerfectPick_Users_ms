@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authentication;
 using _PerfectPickUsers_MS.Functions;
 using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Azure;
 
 namespace _PerfectPickUsers_MS.Controllers
 {
@@ -36,7 +37,7 @@ namespace _PerfectPickUsers_MS.Controllers
             {
                 if (_userService.UserEmailExists(user.Email))
                 {
-                    return BadRequest("User already exists");
+                    return new BadRequestObjectResult(new {Message = "User already exists" });
                 }
             }
             catch (Exception e)
@@ -60,7 +61,7 @@ namespace _PerfectPickUsers_MS.Controllers
         [Route("GoogleLogin")]
         public IActionResult GoogleLogin()
         {
-            var properties = new AuthenticationProperties { RedirectUri = "api/User/signin-google" };
+            var properties = new AuthenticationProperties { RedirectUri = "Users/signin-google" };
             return Challenge(properties, GoogleDefaults.AuthenticationScheme);
         }
 
@@ -71,7 +72,7 @@ namespace _PerfectPickUsers_MS.Controllers
             var response = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             if (response.Principal == null)
             {
-                return BadRequest("Google authentication failed");
+                return new BadRequestObjectResult(new { Message = "Google authentication failed" });
             }
 
             string email = response.Principal.FindFirst(ClaimTypes.Email).Value;
@@ -83,7 +84,7 @@ namespace _PerfectPickUsers_MS.Controllers
                 {
                     return BadRequest("Admins must use standard login!");
                 }
-                return Ok(_TokenModule.GenerateToken(userID, true, false));
+                return Ok(_TokenModule.GenerateToken(userID, true));
             }
 
             string givenName = response.Principal.FindFirst(ClaimTypes.GivenName).Value;
@@ -184,21 +185,20 @@ namespace _PerfectPickUsers_MS.Controllers
             int? userID = _TokenModule.ValidateToken(token, true);
             if (!userID.HasValue)
             {
-                return Unauthorized("Invalid token.");
+                return new UnauthorizedObjectResult(new { Message = "Unauthorized" });
             }
 
             if (!_userService.UserIDExists(userID.Value))
             {
-                return Unauthorized("Invalid token.");
+                return new UnauthorizedObjectResult(new { Message = "Unauthorized" });
             }
 
             var user = _userService.GetUser(Convert.ToInt16(userID));
             if (user == null)
             {
-                return Unauthorized();
+                return new UnauthorizedObjectResult(new { Message = "Unauthorized" });
             }
-
-            return Ok("Valid token.");
+            return new OkObjectResult(new { Message = "Valid Token" });
 
 
 
@@ -280,6 +280,29 @@ namespace _PerfectPickUsers_MS.Controllers
 
         }
 
+        [HttpGet]
+        [Route("Email")]
+        public IActionResult GetEmailUser([FromQuery] string email)
+        {
+            try
+            {
+                if (_userService.UserEmailExists(email))
+                {
+                    int userID = _userService.GetUserIDFromEmail(email);
+                    return Ok(_userService.GetUser(userID));
+                }
+                else
+                {
+                    return NotFound("User not found");
+                }
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
+
+
         [HttpPost]
         [Route("ChangePassword")]
         public IActionResult ChangePassword([FromQuery] int userID, [FromQuery] string currentPassword, [FromQuery] string newPassword)
@@ -299,18 +322,5 @@ namespace _PerfectPickUsers_MS.Controllers
                 return StatusCode(500, e.Message);
             }
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 }

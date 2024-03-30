@@ -1,5 +1,6 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR webapp
+WORKDIR /webapp
+
 
 EXPOSE 8080
 EXPOSE 8081
@@ -10,10 +11,10 @@ RUN dotnet restore PerfectPickUsers_MS.csproj
 
 #COPY ALL FILES
 COPY . .
-RUN dotnet publish -c Release -o out
+RUN dotnet publish -c Release -o /release
 
 #BUILD THE IMAGE
 FROM mcr.microsoft.com/dotnet/sdk:8.0
 WORKDIR /webapp
-COPY --from=build /webapp/out .
+COPY --from=build /release .
 ENTRYPOINT ["dotnet", "PerfectPickUsers_MS.dll"]

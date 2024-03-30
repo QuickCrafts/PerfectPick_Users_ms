@@ -87,13 +87,15 @@ namespace _PerfectPickUsers_MS.Services
                 {
                     To = user.Email,
                     Subject = "Welcome to PerfectPick!",
-                    Body = "Welcome to PerfectPick! Your account has been created successfully. To activate it, please click on the link below: " + "http://localhost:5000/User/Verify?userToken=" + _TokenModule.GenerateToken(userID, false, false)
+                    Body = "Welcome to PerfectPick! Your account has been created successfully. To activate it, please click on the link below: " + "http://localhost:8080/Users/verify?token=" + _TokenModule.GenerateToken(userID, false)
                 };
 
                 _EmailSender.SendEmail(emailToSend);
             }
             catch (Exception e)
             {
+                var userID = _userRepository.GetUserIDFromEmail(user.Email);
+                _userRepository.DeleteUser(userID);
                 throw new Exception("Error while creating user email " + e.Message);
             }
 
@@ -204,7 +206,7 @@ namespace _PerfectPickUsers_MS.Services
                 if(isRegistered)
                 {
                     bool isAdmin = _userRepository.UserIsAdmin(userID);
-                    return _TokenModule.GenerateToken(userID, true, isAdmin);
+                    return _TokenModule.GenerateToken(userID, true);
                 }
                 else
                 {
