@@ -26,6 +26,7 @@ namespace _PerfectPickUsers_MS.Models.User
 
         public bool Setup { get; set; }
 
+        public int? CountryId { get; set; }
         
 
 

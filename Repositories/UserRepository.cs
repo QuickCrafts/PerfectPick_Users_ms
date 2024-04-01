@@ -29,7 +29,10 @@ namespace _PerfectPickUsers_MS.Repositories
                     Setup = user.Setup,
                     CreatedTime = user.CreatedTime,
                     Role = user.Role,
-                    AvatarUrl = user.AvatarUrl
+                    AvatarUrl = user.AvatarUrl,
+                    CountryId = user.IdCountry
+                    
+                    
                     
                 };
             }
@@ -55,7 +58,8 @@ namespace _PerfectPickUsers_MS.Repositories
                         Verified = user.Verified,
                         Setup = user.Setup,
                         CreatedTime = user.CreatedTime,
-                        Role = user.Role
+                        Role = user.Role,
+                        CountryId = user.IdCountry
                     });
                 }
                 return usersList;
