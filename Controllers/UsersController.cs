@@ -179,8 +179,8 @@ namespace _PerfectPickUsers_MS.Controllers
         }
 
         [HttpGet]
-        [Route("setup")]
-        public IActionResult VerifyToken([FromQuery] string token)
+        [Route("verify/{token}")]
+        public IActionResult VerifyToken(string token)
         {
             int? userID = _TokenModule.ValidateToken(token, true);
             if (!userID.HasValue)
@@ -198,7 +198,7 @@ namespace _PerfectPickUsers_MS.Controllers
             {
                 return new UnauthorizedObjectResult(new { Message = "Unauthorized" });
             }
-            return new OkObjectResult(new { Message = "Valid Token" });
+            return new OkObjectResult(new { Message = "Valid Token", ID = userID });
 
 
 
