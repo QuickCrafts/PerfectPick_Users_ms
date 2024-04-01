@@ -329,5 +329,31 @@ namespace _PerfectPickUsers_MS.Controllers
                 return StatusCode(500, new { Message = e.Message });
             }
         }
+
+        [HttpGet]
+        [Route("verify/role/{id}")]
+        public IActionResult VerifyRole(int id)
+        {
+            try
+            {
+                if (!_userService.UserIDExists(id))
+                {
+                    return new NotFoundObjectResult(new { Message = "User not found" });
+                }
+
+                if (_userService.UserIsAdmin(id))
+                {
+                    return new OkObjectResult(new { isAdmin = true });
+                }
+                else
+                {
+                    return new OkObjectResult(new { isAdmin = false });
+                }
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new { Message = e.Message });
+            }
+        }   
     }
 }
