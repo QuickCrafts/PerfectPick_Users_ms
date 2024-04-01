@@ -42,7 +42,7 @@ namespace _PerfectPickUsers_MS.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode(500, e.Message);
+                return StatusCode(500,new { Message = e.Message });
             }
             try
             {
@@ -53,7 +53,7 @@ namespace _PerfectPickUsers_MS.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode(500, e.Message);
+                return StatusCode(500, new { Message = e.Message });
             }
         }
 
@@ -127,15 +127,15 @@ namespace _PerfectPickUsers_MS.Controllers
             try
             {
                 _userService.VerifyUser(userToken);
-                return Ok("User verified successfully");
+                return Ok(new { Message = "User verified successfully" });
             }
             catch (UserNotFoundException e)
             {
-                return NotFound(e.Message);
+                return NotFound(new {Message = "User not found"});
             }
             catch (Exception e)
             {
-                return StatusCode(500, e.Message);
+                return StatusCode(500,new { Message = e.Message });
             }
         }
 
@@ -145,17 +145,17 @@ namespace _PerfectPickUsers_MS.Controllers
 
             if (!_userService.UserIDExists(id))
             {
-                return NotFound("User not found");
+                return new NotFoundObjectResult(new { Message = "User not found" });
             }
 
             try
             {
                 _userService.UpdateUser(user, id);
-                return StatusCode(201, "User updated successfully");
+                return StatusCode(201, new { Message = "User updated successfully" });
             }
             catch (Exception e)
             {
-                return StatusCode(500, e.Message);
+                return StatusCode(500, new { Message = e.Message });
             }
         }
 
@@ -182,23 +182,30 @@ namespace _PerfectPickUsers_MS.Controllers
         [Route("verify/{token}")]
         public IActionResult VerifyToken(string token)
         {
-            int? userID = _TokenModule.ValidateToken(token, true);
-            if (!userID.HasValue)
+            try
             {
-                return new UnauthorizedObjectResult(new { Message = "Unauthorized" });
-            }
+                int? userID = _TokenModule.ValidateToken(token, true);
+                if (!userID.HasValue)
+                {
+                    return new UnauthorizedObjectResult(new { Message = "Unauthorized" });
+                }
 
-            if (!_userService.UserIDExists(userID.Value))
-            {
-                return new UnauthorizedObjectResult(new { Message = "Unauthorized" });
-            }
+                if (!_userService.UserIDExists(userID.Value))
+                {
+                    return new UnauthorizedObjectResult(new { Message = "Unauthorized" });
+                }
 
-            var user = _userService.GetUser(Convert.ToInt16(userID));
-            if (user == null)
+                var user = _userService.GetUser(Convert.ToInt16(userID));
+                if (user == null)
+                {
+                    return new UnauthorizedObjectResult(new { Message = "Unauthorized" });
+                }
+                return new OkObjectResult(new { Message = "Valid Token", ID = userID });
+            } catch (Exception e)
             {
-                return new UnauthorizedObjectResult(new { Message = "Unauthorized" });
+                return StatusCode(500, new { Message = e.Message });
             }
-            return new OkObjectResult(new { Message = "Valid Token", ID = userID });
+            
 
 
 
@@ -213,7 +220,7 @@ namespace _PerfectPickUsers_MS.Controllers
             {
                 if (!_userService.UserEmailExists(login.Email))
                 {
-                    return new NotFoundObjectResult(new { Message = "User doesn't exist" });
+                    return new NotFoundObjectResult( new { Message = "User doesn't exist"});
                 }
 
                 var token = _userService.Login(login);

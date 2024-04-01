@@ -69,6 +69,7 @@ namespace _PerfectPickUsers_MS.Functions
         {
             try
             {
+                ClaimsPrincipal principal;
                 string key = login ? _SecretLoginKey : _SecretTempKey;
                 var keyBytes = Encoding.UTF8.GetBytes(key);
                 var tokenHandler = new JwtSecurityTokenHandler();
@@ -82,7 +83,15 @@ namespace _PerfectPickUsers_MS.Functions
                 };
 
                 SecurityToken securityToken;
-                var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
+                try
+                {
+                    principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
+                }
+                catch (Exception e)
+                {
+                    return null;
+                }
+
                 var userPotentialID = principal.FindFirst(ClaimTypes.SerialNumber);
                 if (userPotentialID != null)
                 {
