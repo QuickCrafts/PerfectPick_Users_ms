@@ -33,7 +33,7 @@ namespace _PerfectPickUsers_MS.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode(500, e.Message);
+                return StatusCode(500,new { Message = e.Message });
             }
         }
 
@@ -46,7 +46,7 @@ namespace _PerfectPickUsers_MS.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode(500, e.Message);
+                return StatusCode(500, new { Message = e.Message });
             }
         }
 
@@ -56,11 +56,11 @@ namespace _PerfectPickUsers_MS.Controllers
             try
             {
                 _countryService.AddCountry(country);
-                return Ok("Country added");
+                return Ok(new { Message = "Country added" });
             }
             catch (Exception e)
             {
-                return StatusCode(500, e.Message);
+                return StatusCode(500, new { Message = e.Message });
             }
         }
 
@@ -70,11 +70,17 @@ namespace _PerfectPickUsers_MS.Controllers
             try
             {
                 _countryService.DeleteCountry(id);
-                return Ok("Country deleted");
+                return Ok(new
+                {
+                    Message = "Country deleted"
+                });
             }
             catch (Exception e)
             {
-                return StatusCode(500, e.Message);
+                return StatusCode(500, new
+                {
+                    Message = e.Message
+                });
             }
         }
 
@@ -84,11 +90,11 @@ namespace _PerfectPickUsers_MS.Controllers
             try
             {
                 _countryService.UpdateCountry(country, id);
-                return Ok("Country updated");
+                return Ok( new { Message = "Country updated" });
             }
             catch (Exception e)
             {
-                return StatusCode(500, e.Message);
+                return StatusCode(500, new { Message = e.Message });
             }
         }
 
@@ -98,11 +104,11 @@ namespace _PerfectPickUsers_MS.Controllers
             try
             {
                 _countryService.UpdateDatabase();
-                return Ok("Database updated");
+                return Ok(new { Message = "Database updated" });
             }
             catch (Exception e)
             {
-                return StatusCode(500, e.Message);
+                return StatusCode(500, new { Message = e.Message });
             }
         }
 

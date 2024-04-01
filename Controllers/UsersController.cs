@@ -213,15 +213,15 @@ namespace _PerfectPickUsers_MS.Controllers
             {
                 if (!_userService.UserEmailExists(login.Email))
                 {
-                    return NotFound("User doesn't exist");
+                    return new NotFoundObjectResult(new { Message = "User doesn't exist" });
                 }
 
                 var token = _userService.Login(login);
-                return Ok(token);
+                return new OkObjectResult(new { Token = token });
             }
             catch (Exception e)
             {
-                return StatusCode(500, e.Message);
+                return StatusCode(500, new { Message = e.Message });
             }
         }
 
@@ -230,17 +230,17 @@ namespace _PerfectPickUsers_MS.Controllers
         {
             if (!_userService.UserIDExists(id))
             {
-                return NotFound("User not found");
+                return new NotFoundObjectResult(new { Message = "User not found" });
             }
 
             try
             {
                 _userService.DeleteUser(id);
-                return StatusCode(204);
+                return StatusCode(204, new { Message = "User removed" });
             }
             catch (Exception e)
             {
-                return StatusCode(500, e.Message);
+                return StatusCode(500, new { Message =  e.Message });
             }
         }
 
@@ -253,16 +253,16 @@ namespace _PerfectPickUsers_MS.Controllers
                 {
                     if (_userService.UserIDExists(userID.Value))
                     {
-                        return Ok(_userService.GetUser(userID.Value));
+                        return new OkObjectResult(_userService.GetUser(userID.Value));
                     }
                     else
                     {
-                        return NotFound("User not found");
+                        return new NotFoundObjectResult( new { Message = "User not found" });
                     }
                 }
                 catch (Exception e)
                 {
-                    return StatusCode(500, e.Message);
+                    return StatusCode(500, new { Message = e.Message });
                 }
 
             }
@@ -274,7 +274,7 @@ namespace _PerfectPickUsers_MS.Controllers
                 }
                 catch (Exception e)
                 {
-                    return StatusCode(500, e.Message);
+                    return StatusCode(500, new { Message = e.Message });
                 }
             }
 
@@ -293,12 +293,12 @@ namespace _PerfectPickUsers_MS.Controllers
                 }
                 else
                 {
-                    return NotFound("User not found");
+                    return new NotFoundObjectResult(new { Message = "User not found" });
                 }
             }
             catch (Exception e)
             {
-                return StatusCode(500, e.Message);
+                return StatusCode(500, new { Message = e.Message });
             }
         }
 
@@ -311,15 +311,15 @@ namespace _PerfectPickUsers_MS.Controllers
             {
                 if (!_userService.UserIDExists(userID))
                 {
-                    return NotFound("User not found");
+                    return new NotFoundObjectResult(new { Message = "User not found" });
                 }
 
                 _userService.ChangePassword(userID, currentPassword, newPassword);
-                return Ok("Password changed successfully");
+                return new OkObjectResult( new { Message = "Password changed successfully" });
             }
             catch (Exception e)
             {
-                return StatusCode(500, e.Message);
+                return StatusCode(500, new { Message = e.Message });
             }
         }
     }
