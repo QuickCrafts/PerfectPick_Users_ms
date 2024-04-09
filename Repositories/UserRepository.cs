@@ -30,7 +30,8 @@ namespace _PerfectPickUsers_MS.Repositories
                     CreatedTime = user.CreatedTime,
                     Role = user.Role,
                     AvatarUrl = user.AvatarUrl,
-                    CountryId = user.IdCountry
+                    CountryId = user.IdCountry,
+                    Gender = user.Gender
                     
                     
                     
@@ -59,7 +60,8 @@ namespace _PerfectPickUsers_MS.Repositories
                         Setup = user.Setup,
                         CreatedTime = user.CreatedTime,
                         Role = user.Role,
-                        CountryId = user.IdCountry
+                        CountryId = user.IdCountry,
+                        Gender = user.Gender
                     });
                 }
                 return usersList;

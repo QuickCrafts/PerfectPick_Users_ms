@@ -246,6 +246,25 @@ namespace _PerfectPickUsers_MS.Services
             }
         }
 
+        public void RequestPasswordReset(string email)
+        {
+            try
+            {
+                int userID = _userRepository.GetUserIDFromEmail(email);
+                EmailDTO emailToSend = new EmailDTO
+                {
+                    To = email,
+                    Subject = "Password Reset",
+                    Body = "To reset your password, please click on the link below: " + "http://localhost:8080/Users/auth/recover?token=" + _TokenModule.GeneratePasswordResetToken(userID)
+                };
+
+                _EmailSender.SendEmail(emailToSend);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
         public void ChangePassword(int userID,string currentPassword ,string newPassword)
         {
             try
@@ -255,6 +274,18 @@ namespace _PerfectPickUsers_MS.Services
                 {
                     throw new Exception("Invalid password");
                 }
+                _userRepository.ChangePassword(userID, _Encryptor.Encrypt(newPassword));
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public void SetNewPassword(int userID, string newPassword)
+        {
+            try
+            {
                 _userRepository.ChangePassword(userID, _Encryptor.Encrypt(newPassword));
             }
             catch (Exception e)
