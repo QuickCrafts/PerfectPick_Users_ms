@@ -3,6 +3,7 @@ using _PerfectPickUsers_MS.Functions;
 using _PerfectPickUsers_MS.Models.Email;
 using _PerfectPickUsers_MS.Models.Login;
 using _PerfectPickUsers_MS.Models.User;
+using _PerfectPickUsers_MS.Models.Contact;
 using _PerfectPickUsers_MS.Repositories;
 
 
@@ -292,6 +293,19 @@ namespace _PerfectPickUsers_MS.Services
             {
                 throw new Exception(e.Message);
             }
+        }
+
+        public void Contact(ContactModel contact)
+        {
+            String? ourEmail = Environment.GetEnvironmentVariable("emailUsername") ?? throw new Exception("Email environment variable wasn't found");
+            EmailDTO emailToSend = new EmailDTO
+            {
+                To = ourEmail,
+                Subject = "Contact,"+ contact.Name + "("+ contact.Email +")",
+                Body = contact.Name + "(" + contact.Email + ")"+ "Says: "+ contact.Message
+            };
+
+            _EmailSender.SendEmail(emailToSend);
         }
     }
 }

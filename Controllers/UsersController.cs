@@ -1,19 +1,16 @@
-﻿using _PerfectPickUsers_MS.DB;
+﻿
 using _PerfectPickUsers_MS.Exceptions;
 using _PerfectPickUsers_MS.Models.Login;
 using _PerfectPickUsers_MS.Models.User;
+using _PerfectPickUsers_MS.Models.Contact;
 using _PerfectPickUsers_MS.Services;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using _PerfectPickUsers_MS.Functions;
-using Microsoft.AspNetCore.Authentication.Facebook;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Azure;
+
 
 namespace _PerfectPickUsers_MS.Controllers
 {
@@ -398,6 +395,22 @@ namespace _PerfectPickUsers_MS.Controllers
             {
                 return StatusCode(500, new { Message = e.Message });
             }
-        }   
+        }
+
+        [HttpPost]
+        [Route("contact")]
+        public IActionResult Contact([FromBody] ContactModel contact)
+        {
+            try
+            {
+                _userService.Contact(contact);
+                return new OkObjectResult(new { Message = "Message sent" });
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new { Message = e.Message });
+            }
+        }
     }
+
 }

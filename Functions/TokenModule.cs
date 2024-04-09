@@ -125,7 +125,7 @@ namespace _PerfectPickUsers_MS.Functions
                 {
                     principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     return null;
                 }
