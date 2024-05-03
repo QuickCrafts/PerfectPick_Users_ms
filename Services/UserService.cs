@@ -198,10 +198,7 @@ namespace _PerfectPickUsers_MS.Services
             try
             {
                 int userID = _userRepository.GetUserIDFromEmail(loginInfo.Email);
-                if (!_userRepository.UserIsVerified(userID))
-                {
-                    throw new UserNotVerifiedException("User not verified");
-                }
+                // if (!_userRepository.UserIsVerified(userID)){throw new UserNotVerifiedException("User not verified");}
                 UserModel user = _userRepository.GetUser(userID);
                 bool isRegistered = _Encryptor.Verify(loginInfo.Password, user.Password);
                 if(isRegistered)
