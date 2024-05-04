@@ -192,12 +192,14 @@ namespace _PerfectPickUsers_MS.Controllers
                     return new UnauthorizedObjectResult(new { Message = "Unauthorized" });
                 }
 
+                bool isAdmin = _userService.UserIsAdmin(userID.Value);
+
                 var user = _userService.GetUser(Convert.ToInt16(userID));
                 if (user == null)
                 {
                     return new UnauthorizedObjectResult(new { Message = "Unauthorized" });
                 }
-                return new OkObjectResult(new { Message = "Valid Token", ID = userID });
+                return new OkObjectResult(new { Message = "Valid Token", ID = userID , Admin = isAdmin});
             } catch (Exception e)
             {
                 return StatusCode(500, new { Message = e.Message });
