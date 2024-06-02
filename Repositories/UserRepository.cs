@@ -10,7 +10,7 @@ namespace _PerfectPickUsers_MS.Repositories
         public UserModel GetUser(int userID)
         {
 
-            using (var _context = new PerfectPickUsersDbContext())
+            using (var _context = new PerfectPickUsersDbSecondContext())
             {
                 User? user = _context.Users.Find(userID);
                 if (user == null)
@@ -42,7 +42,7 @@ namespace _PerfectPickUsers_MS.Repositories
 
         public List<UserModel> GetAllUsers()
         {
-            using (var _context = new PerfectPickUsersDbContext())
+            using (var _context = new PerfectPickUsersDbSecondContext())
             {
                 var users = _context.Set<User>().ToList();
                 var usersList = new List<UserModel>();
@@ -91,6 +91,25 @@ namespace _PerfectPickUsers_MS.Repositories
                     _context.SaveChanges();
                     return true;
                 }
+                using (var _context = new PerfectPickUsersDbSecondContext())
+                {
+                    var newUser = new User
+                    {
+                        Email = user.Email,
+                        Password = user.Password,
+                        FirstName = user.FirstName,
+                        LastName = user.LastName,
+                        Birthdate = user.Birthdate,
+                        Verified = false,
+                        Setup = false,
+                        CreatedTime = DateTime.Now.ToString(),
+                        Role = user.Role
+
+                    };
+                    _context.Users.Add(newUser);
+                    _context.SaveChanges();
+                    return true;
+                }
             }
             catch (Exception e)
             {
@@ -106,6 +125,18 @@ namespace _PerfectPickUsers_MS.Repositories
             try
             {
                 using (var _context = new PerfectPickUsersDbContext())
+                {
+                    User userToUpdate = _context.Users.Find(userID) ?? throw new UserNotFoundException("User not found");
+                    userToUpdate.FirstName = user.FirstName ?? userToUpdate.FirstName;
+                    userToUpdate.LastName = user.LastName ?? userToUpdate.LastName;
+                    userToUpdate.Birthdate = user.Birthdate ?? userToUpdate.Birthdate;
+                    userToUpdate.Gender = user.Gender ?? userToUpdate.Gender;
+                    userToUpdate.IdCountry = user.IdCountry ?? userToUpdate.IdCountry;
+                    userToUpdate.AvatarUrl = user.AvatarUrl ?? userToUpdate.AvatarUrl;
+
+                    _context.SaveChanges();
+                }
+                using (var _context = new PerfectPickUsersDbSecondContext())
                 {
                     User userToUpdate = _context.Users.Find(userID) ?? throw new UserNotFoundException("User not found");
                     userToUpdate.FirstName = user.FirstName ?? userToUpdate.FirstName;
@@ -135,6 +166,12 @@ namespace _PerfectPickUsers_MS.Repositories
                     _context.Users.Remove(userToRemove);
                     _context.SaveChanges();
                 }
+                using (var _context = new PerfectPickUsersDbSecondContext())
+                {
+                    User userToRemove = _context.Users.Find(userID) ?? throw new UserNotFoundException("User not found");
+                    _context.Users.Remove(userToRemove);
+                    _context.SaveChanges();
+                }
             }
             catch (Exception e)
             {
@@ -147,6 +184,12 @@ namespace _PerfectPickUsers_MS.Repositories
             try
             {
                 using (var _context = new PerfectPickUsersDbContext())
+                {
+                    User userToVerify = _context.Users.Find(userID) ?? throw new UserNotFoundException("User not found");
+                    userToVerify.Verified = true;
+                    _context.SaveChanges();
+                }
+                using (var _context = new PerfectPickUsersDbSecondContext())
                 {
                     User userToVerify = _context.Users.Find(userID) ?? throw new UserNotFoundException("User not found");
                     userToVerify.Verified = true;
@@ -169,6 +212,12 @@ namespace _PerfectPickUsers_MS.Repositories
                     userToSetup.Setup = true;
                     _context.SaveChanges();
                 }
+                using (var _context = new PerfectPickUsersDbSecondContext())
+                {
+                    User userToSetup = _context.Users.Find(userID) ?? throw new UserNotFoundException("User not found");
+                    userToSetup.Setup = true;
+                    _context.SaveChanges();
+                }
             }
             catch (Exception e)
             {
@@ -178,7 +227,7 @@ namespace _PerfectPickUsers_MS.Repositories
 
         public bool UserIDExists(int userID)
         {
-            using (var _context = new PerfectPickUsersDbContext())
+            using (var _context = new PerfectPickUsersDbSecondContext())
             {
                 return _context.Users.Find(userID) != null;
             }
@@ -186,7 +235,7 @@ namespace _PerfectPickUsers_MS.Repositories
 
         public bool UserEmailExists(string email)
         {
-            using (var _context = new PerfectPickUsersDbContext())
+            using (var _context = new PerfectPickUsersDbSecondContext())
             {
                 var user = _context.Users.SingleOrDefault(u => u.Email == email);
                 return user != null;
@@ -195,7 +244,7 @@ namespace _PerfectPickUsers_MS.Repositories
 
         public bool UserIsVerified(int userID)
         {
-            using (var _context = new PerfectPickUsersDbContext())
+            using (var _context = new PerfectPickUsersDbSecondContext())
             {
                 var user = _context.Users.Find(userID) ?? throw new UserNotFoundException("User not found");
                 return user.Verified;
@@ -204,7 +253,7 @@ namespace _PerfectPickUsers_MS.Repositories
 
         public bool UserIsSetup(int userID)
         {
-            using (var _context = new PerfectPickUsersDbContext())
+            using (var _context = new PerfectPickUsersDbSecondContext())
             {
                 var user = _context.Users.Find(userID) ?? throw new UserNotFoundException("User not found");
                 return user.Setup;
@@ -213,7 +262,7 @@ namespace _PerfectPickUsers_MS.Repositories
 
         public int GetUserIDFromEmail(string email)
         {
-            using (var _context = new PerfectPickUsersDbContext())
+            using (var _context = new PerfectPickUsersDbSecondContext())
             {
                 var user = _context.Users.SingleOrDefault(u => u.Email == email);
                 if (user == null)
@@ -226,7 +275,7 @@ namespace _PerfectPickUsers_MS.Repositories
 
         public bool UserIsAdmin(int userID)
         {
-            using (var _context = new PerfectPickUsersDbContext())
+            using (var _context = new PerfectPickUsersDbSecondContext())
             {
                 var user = _context.Users.Find(userID) ?? throw new UserNotFoundException("User not found");
                 bool userRole = user.Role;
@@ -236,7 +285,7 @@ namespace _PerfectPickUsers_MS.Repositories
 
         public void ChangePassword(int userID, string newPassword)
         {
-            using (var _context = new PerfectPickUsersDbContext())
+            using (var _context = new PerfectPickUsersDbSecondContext())
             {
                 var user = _context.Users.Find(userID) ?? throw new UserNotFoundException("User not found");
                 user.Password = newPassword;

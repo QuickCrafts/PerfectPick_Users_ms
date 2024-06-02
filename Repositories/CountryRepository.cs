@@ -17,7 +17,7 @@ namespace _PerfectPickUsers_MS.Repositories
         }
         public CountryModel GetCountry(int countryID)
         {
-            using (var _context = new PerfectPickUsersDbContext())
+            using (var _context = new PerfectPickUsersDbSecondContext())
             {
                 Country? country = _context.Countries.Find(countryID);
                 if (country == null)
@@ -36,7 +36,7 @@ namespace _PerfectPickUsers_MS.Repositories
 
         public List<CountryModel> GetAllCountries()
         {
-            using (var _context = new PerfectPickUsersDbContext())
+            using (var _context = new PerfectPickUsersDbSecondContext())
             {
                 var countries = _context.Set<Country>().ToList();
                 var countriesList = new List<CountryModel>();
@@ -66,11 +66,33 @@ namespace _PerfectPickUsers_MS.Repositories
                 });
                 _context.SaveChanges();
             }
+            using (var _context = new PerfectPickUsersDbSecondContext())
+            {
+                _context.Countries.Add(new Country
+                {
+                    Name = country.Name,
+                    Code2 = country.Code_2,
+                    Code3 = country.Code_3
+                });
+                _context.SaveChanges();
+            }
         }
 
         public void UpdateCountry(CountryModel country, int countryID)
         {
             using (var _context = new PerfectPickUsersDbContext())
+            {
+                Country? countryToUpdate = _context.Countries.Find(countryID);
+                if (countryToUpdate == null)
+                {
+                    throw new Exception("Country not found");
+                }
+                countryToUpdate.Name = country.Name;
+                countryToUpdate.Code2 = country.Code_2;
+                countryToUpdate.Code3 = country.Code_3;
+                _context.SaveChanges();
+            }
+            using (var _context = new PerfectPickUsersDbSecondContext())
             {
                 Country? countryToUpdate = _context.Countries.Find(countryID);
                 if (countryToUpdate == null)
@@ -96,6 +118,16 @@ namespace _PerfectPickUsers_MS.Repositories
                 _context.Countries.Remove(country);
                 _context.SaveChanges();
             }
+            using (var _context = new PerfectPickUsersDbSecondContext())
+            {
+                Country? country = _context.Countries.Find(countryID);
+                if (country == null)
+                {
+                    throw new Exception("Country not found");
+                }
+                _context.Countries.Remove(country);
+                _context.SaveChanges();
+            }
         }
 
         public void UpdateDatabase()
@@ -106,6 +138,22 @@ namespace _PerfectPickUsers_MS.Repositories
                 var countriesList = countries.Content.ReadAsStringAsync().Result;
                 var countriesArray = JArray.Parse(countriesList);
                 using (var _context = new PerfectPickUsersDbContext())
+                {
+                    foreach (var country in countriesArray)
+                    {
+                        var Name = JObject.Parse(country["name"].ToString());
+                        var CountryName = Name["common"];
+                        var countryToAdd = new Country
+                        {
+                            Name = CountryName.ToString(),
+                            Code2 = country["cca2"].ToString(),
+                            Code3 = country["cca3"].ToString()
+                        };
+                        _context.Countries.Add(countryToAdd);
+                    }
+                    _context.SaveChanges();
+                }
+                using (var _context = new PerfectPickUsersDbSecondContext())
                 {
                     foreach (var country in countriesArray)
                     {
